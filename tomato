@@ -21,7 +21,7 @@ struct POINT queue[10000000];
 
 int main(int argc, char** argv) {
 
-	int M,N;
+	int M, N;
 
 	cin >> M;
 	cin >> N;
@@ -61,20 +61,17 @@ int main(int argc, char** argv) {
 		{
 			if (table[i][j] == 1)
 			{
-				start.m = j;
-				start.n = i;
+				queue[head].m = j;
+				queue[head].n = i;
+				queue[head].time = 0;
+				head++;
 			}
 		}
 	}
 
-	queue[head].m = start.m;
-	queue[head].n = start.n;
-	queue[head].time = 0;
-	head++;
-
 	int time = 0;
 
-	while (head-tail>0)
+	while (head - tail>0)
 	{
 		int cur_m = queue[tail].m;
 		int cur_n = queue[tail].n;
@@ -84,36 +81,36 @@ int main(int argc, char** argv) {
 		if (time < cur_time)
 			time = cur_time;
 
-		if (cur_n - 1 >= 0 && table[cur_n-1][cur_m] == 0)
+		if (cur_n - 1 >= 0 && table[cur_n - 1][cur_m] == 0)
 		{
-			table[cur_n-1][cur_m] = 1;
+			table[cur_n - 1][cur_m] = 1;
 			queue[head].m = cur_m;
 			queue[head].n = cur_n - 1;
 			queue[head].time = cur_time + 1;
 			head++;
 		}
 
-		if (cur_n + 1 < N && table[cur_n+1][cur_m] == 0 )
+		if (cur_n + 1 < N && table[cur_n + 1][cur_m] == 0)
 		{
-			table[cur_n+1][cur_m] = 1;
+			table[cur_n + 1][cur_m] = 1;
 			queue[head].m = cur_m;
 			queue[head].n = cur_n + 1;
 			queue[head].time = cur_time + 1;
 			head++;
 		}
 
-		if (cur_m + 1 < M && table[cur_n][cur_m+1] == 0)
+		if (cur_m + 1 < M && table[cur_n][cur_m + 1] == 0)
 		{
-			table[cur_n][cur_m+1] = 1;
-			queue[head].m = cur_m+1;
+			table[cur_n][cur_m + 1] = 1;
+			queue[head].m = cur_m + 1;
 			queue[head].n = cur_n;
 			queue[head].time = cur_time + 1;
 			head++;
 		}
 
-		if (cur_m - 1>=0 && table[cur_n][cur_m-1] == 0)
+		if (cur_m - 1 >= 0 && table[cur_n][cur_m - 1] == 0)
 		{
-			table[cur_n][cur_m-1] = 1;
+			table[cur_n][cur_m - 1] = 1;
 			queue[head].m = cur_m - 1;
 			queue[head].n = cur_n;
 			queue[head].time = cur_time + 1;
@@ -132,7 +129,7 @@ int main(int argc, char** argv) {
 		}
 	}
 
-	
+
 	if (notComplete == 1)
 		cout << -1 << endl;
 	else
