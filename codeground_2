@@ -1,0 +1,67 @@
+// 아래 기본 제공된 코드를 수정 또는 삭제하고 본인이 코드를 사용하셔도 됩니다.
+#include <cstdio>
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+using namespace std;
+#define _MAX 300001
+
+int arr[_MAX];
+
+int compare(const void *first,const void *second)
+{
+	if (*(int*)first < *(int*)second)
+		return 1;
+	else if (*(int*)first > *(int*)second) 
+		return -1; 
+	else return 0;
+}
+
+int main(int argc, char** argv) {
+
+
+	int TC;
+	int test_case;
+
+	cin >> TC;
+	for (test_case = 1; test_case <= TC; test_case++) {
+		int N;
+		cin >> N;
+		for (int num = 0; num < N; num++)
+		{
+			cin >> arr[num];
+		}
+
+		qsort(arr, N, sizeof(int), compare);
+
+		int champ = 1;
+		int no = 0;
+
+		for (int n = 1; n < N; n++)
+		{
+			int score = 1;
+			for (int m = 0; m < N; m++)
+			{
+				if (arr[n] + N >= arr[m] + score)
+				{
+					score++;
+				}
+				else
+				{
+					no = 1;
+					break;
+				}
+			}
+			if (no == 1)
+				break;
+			else
+				champ++;
+		}
+
+		printf("Case #%d\n", test_case);	// cout 사용 가능
+		printf("%d", champ);
+	}
+
+	return 0;	// 정상종료 시 반드시 0을 리턴해야 합니다.
+}
