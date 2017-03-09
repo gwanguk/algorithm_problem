@@ -1,0 +1,46 @@
+#include <cstdio>
+#include <iostream>
+#include <istream>
+#include <string>
+#include <list>
+#include <unordered_map>
+using namespace std;
+
+int main() {
+	unordered_map<string,int> map;
+
+	int N;
+	cin >> N;
+
+	string name;
+	string status;
+
+	unordered_map<string, int>::iterator iter;
+	for (int i = 0; i < N; i++)
+	{
+		cin >> name;
+		cin >> status;
+		if(map.find(name)==map.end())
+			map.insert(unordered_map<string, int>::value_type(name,i));
+		else
+		{
+			map.erase(name);
+		}
+			
+	}
+
+	list<string> print;
+	for (iter = map.begin(); iter != map.end(); iter++)
+	{
+		print.push_back(iter->first);
+	}
+	print.sort();
+
+	list<string> last;
+	for (list<string>::iterator tmp = print.begin(); tmp != print.end(); tmp++)
+	{
+		last.push_front(*tmp);
+	}
+	for (list<string>::iterator tmp = last.begin(); tmp != last.end(); tmp++)
+		cout << *tmp << endl;
+}
