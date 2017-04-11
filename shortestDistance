@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <algorithm>
+#define min(a,b) (((a)<(b))?(a):(b))
+
+using namespace std;
+
+typedef struct Point
+{
+	double x;
+	double y;
+};
+
+int compare(const void * a, const void *b)
+{
+	Point *p1 = (Point *)a;
+	Point *p2 = (Point *)b;
+	return p1->x - p2->x;
+}
+
+int distance(Point a, Point b)
+{
+	return sqrt(pow((a.x - b.x), 2) + pow(a.y - b.y, 2));
+}
+
+double borderDistance(Point borders[], int count)
+{
+	
+}
+
+double closePairRecursive(Point points[], int count)
+{
+	Point * borders = NULL;
+	double d;
+
+	if (count < 2)
+	{
+		return 0;
+	}
+	else if(count <3)
+	{
+		Point a = points[0];
+		Point b = points[1];
+		Point c = points[2];
+		return min(min(distance(a, b),distance(b, c)),distance(a,c));
+	}
+	else
+	{
+		double dl = closePairRecursive(points, count / 2);
+		double dr = closePairRecursive(points + count / 2, count - count / 2);
+		d = min(dl, dr);
+		double dc = borderDistance()
+	}
+}
+
+double closetPair(Point points[], int count)
+{
+	double min;
+	qsort(points, 6, sizeof(Point), compare);
+
+	return closePairRecursive(points, count);
+}
+
+
+
+int main()
+{
+	int count = 0;
+	double min_dist = 0;
+
+	Point points[] = { {2,5}, {15,30},{40,50},{5,2},{15,10},{10,5} };
+	
+
+	for (int i = 0; i < 6; i++)
+	{
+		printf("(%d, %d)  ", points[i].x, points[i].y);
+	}
+
+
+	count = sizeof(points) / sizeof(Point);
+	min_dist = closetPair(points, count);
+}
