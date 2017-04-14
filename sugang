@@ -1,0 +1,69 @@
+#include <cstdio>
+#include <list>
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+struct Course {
+	int score;
+	int cnt;
+};
+
+
+int course[10001] = { 0 };
+int sol[10001] = { 0 };
+int Min = 12000;
+int Max = -1;
+
+int func(int N) {
+	int max=0;
+	int tmp;
+	if (N < Min)
+		return 0;
+	if (sol[N] != 0)
+		return sol[N];
+	for (int i = N; i >0 ; i--)
+	{
+		if (course[i] > 0 && N-i>=0)
+		{
+			course[i]--;
+			tmp = func(N - i) + i;
+			if (max < tmp)
+				max = tmp;
+			course[i]++;
+			sol[N] = tmp;
+		}
+	}
+	return max;
+}
+
+int main(int argc, char** argv) {
+	//setbuf(stdout, NULL);
+
+	int T;
+	int test_case;
+	int N;
+	int M;
+	int tmp;
+	int sol;
+	vector<Course>::iterator iter;
+	cin >> T;
+	for (test_case = 1; test_case <= T; test_case++) {
+		cin >> N; cin >> M;
+		for (int i = 0; i < N; i++)
+		{
+			cin >> tmp;
+			course[tmp]++;
+			if (Min > tmp)
+				Min = tmp;
+		}
+		sol = func(M);
+
+		printf("Case #%d\n", test_case);
+		cout << sol << endl;
+
+	}
+
+	return 0;	// 정상종료 시 반드시 0을 리턴해야 합니다.
+}
