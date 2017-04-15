@@ -1,0 +1,132 @@
+#include <cstdio>
+#include <iostream>
+#include <math.h>
+#include <algorithm>
+
+using namespace std;
+
+int map[101][101];
+int sum[101][101];
+int sol[101][101];
+
+int zero(int  a)
+{
+	int  cnt = 0;
+	while (a >0) {
+		if (a % 6 == 0)
+		{
+			cnt++;
+			a /= 6;
+		}
+		else
+			break;
+	}
+	return cnt;
+}
+
+int  small(int a, int cnt)
+{
+	int ret;
+	int two = 0;
+	int three = 0;
+	a= a / pow(6, cnt);
+	ret =a;
+	while (ret >0) {
+		if (ret % 2 == 0)
+		{
+			two++;
+			ret /= 2;
+		}
+		else
+			break;
+	}
+	ret = a;
+	while (ret >0) {
+		if (ret % 3 == 0)
+		{
+			three++;
+			ret /= 3;
+		}
+		else
+			break;
+	}
+
+	return  pow(2, two)* pow(3, three);
+}
+
+void calc(int i, int j) {
+	int tmp1,tmp2;
+	if (i == 0)
+	{
+		int zeros = zero(sum[i][j - 1] * map[i][j]);
+		sol[i][j] =sol[i][j-1]+ zeros;
+		sum[i][j] = small(sum[i][j-1] * map[i][j], zeros);
+	}
+	else if (j == 0)
+	{
+		int zeros = zero(sum[i-1][j] * map[i][j]);
+		sol[i][j] = sol[i-1][j] + zeros;
+		sum[i][j] = small(sum[i-1][j] * map[i][j], zeros);
+	}
+	else
+	{
+		tmp1 = sum[i-1][j] * map[i][j];
+		tmp2 = sum[i ][j-1] * map[i][j];
+		int tmp1_zero = zero(tmp1);
+		int tmp2_zero = zero(tmp2);
+		if (sol[i - 1][j]+tmp1_zero >  sol[i][j-1]+tmp2_zero)
+		{
+			sol[i][j] = tmp1_zero + sol[i-1][j];
+			sum[i][j] = small(sum[i - 1][j] * map[i][j], tmp1_zero);
+		}
+		else
+		{
+			sol[i][j] =  tmp2_zero+ sol[i][j - 1];
+			sum[i][j] = small(sum[i][j - 1] * map[i][j], tmp2_zero);
+		}
+	}
+}
+
+int main(int argc, char** argv) {
+	//setbuf(stdout, NULL);
+
+	int T;
+	int test_case;
+	int N;
+	cin >> T;
+	for (test_case = 1; test_case <= T; test_case++) {
+		cin >> N;
+
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < N; j++)
+			{
+				cin >> map[i][j];
+			}
+		}
+		sol[0][0] = zero(map[0][0]);
+		sum[0][0] = small(map[0][0],sol[0][0]);
+
+		for (int n = 0; n< N; n++)
+		{
+			if(n!=0)
+			calc(n, n);
+			for (int i = n + 1; i <  N; i++)
+			{
+				calc(n, i);
+			}
+			for (int i = n + 1; i <  N ; i++)
+			{
+				calc(i, n);
+			}
+		}
+
+		int last = sol[N - 1][N - 1];
+
+		printf("Case #%d\n", test_case);
+		cout << last << endl;
+
+	}
+
+	return 0;	// 정상종료 시 반드시 0을 리턴해야 합니다.
+}
