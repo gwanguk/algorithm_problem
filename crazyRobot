@@ -1,0 +1,49 @@
+#include <cstdio>
+#include <iostream>
+#include <math.h>
+#include <algorithm>
+#include <queue>
+using namespace std;
+
+int map[40][40];
+
+int dx[4] = {1,-1,0,0};
+int dy[4] = { 0,0,1,-1 };
+double probs[4] = {0};
+double total = 0;
+
+int N;
+void func(int m, int n,double prob, int cur_n)
+{
+	if (cur_n==N)
+	{
+		total += prob;
+		return;
+	}
+	for (int i = 0; i < 4; i++)
+	{
+		if (map[n + dy[i]][m + dx[i]] == 0)
+		{
+			map[n + dy[i]][m + dx[i]] = 1;
+			func(m + dx[i],n + dy[i], probs[i]*prob, cur_n +1);
+			map[n + dy[i]][m + dx[i]] = 0;
+		}
+	}
+}
+
+int main(int argc, char** argv) {
+
+	cin >> N;
+	for (int i = 0; i < 4; i++)
+	{
+		double tmp;
+		cin >> tmp;
+		probs[i]=tmp/100;
+	}
+
+	map[20][20] = 1;	
+	func(20, 20, 1, 0);
+	printf("%.10lf", total);
+
+	return 0;	// 정상종료 시 반드시 0을 리턴해야 합니다.
+}
