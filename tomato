@@ -1,139 +1,93 @@
 #include <cstdio>
 #include <iostream>
-
+#include <math.h>
+#include <algorithm>
+#include <queue>
 using namespace std;
-
-int table[1001][1001];
-
-struct POINT {
+int map[1001][1001];
+struct Point {
 	int m;
 	int n;
-	int time;
-	POINT()
-	{
-		m = 0;
-		n = 0;
-		time = 0;
-	}
 };
+queue<Point> infector;
+int M, N;
 
-struct POINT queue[10000000];
+int check(int m, int n)
+{
+	if (m >= 0 && m < M&&n>=0 && n < N)
+		return 1;
+	else
+		return 0;
+}
 
 int main(int argc, char** argv) {
-
-	int M, N;
-
-	cin >> M;
-	cin >> N;
-
-	int head = 0;
-	int tail = 0;
-
-	for (int i = 0; i < N; i++)
+	//setbuf(stdout, NULL);
+	cin >> M; cin >> N;
+	int start_m;
+	int start_n;
+	int cnt = 0;
+	for (int n = 0; n < N; n++)
 	{
-		for (int j = 0; j < M; j++)
+		for (int m = 0; m < M; m++)
 		{
-			cin >> table[i][j];
-		}
-	}
-
-	int already = 1;
-	for (int i = 0; i < N; i++)
-	{
-		for (int j = 0; j < M; j++)
-		{
-			if (table[i][j] == 0)
-				already = 0;
-		}
-	}
-	if (already == 1)
-	{
-		cout << 0 << endl;
-		return 0;
-	}
-
-
-	//start find
-	struct POINT start;
-	for (int i = 0; i < N; i++)
-	{
-		for (int j = 0; j < M; j++)
-		{
-			if (table[i][j] == 1)
+			int tmp;
+			cin >> tmp;
+			map[n][m]=tmp;
+			if (tmp == 1)
 			{
-				queue[head].m = j;
-				queue[head].n = i;
-				queue[head].time = 0;
-				head++;
+				infector.push(Point{ m,n });
 			}
 		}
 	}
 
-	int time = 0;
-
-	while (head - tail>0)
+	Point cur;
+	int timer = 0;
+	while (infector.size()>0)
 	{
-		int cur_m = queue[tail].m;
-		int cur_n = queue[tail].n;
-		int cur_time = queue[tail].time;
-		tail++;
-
-		if (time < cur_time)
-			time = cur_time;
-
-		if (cur_n - 1 >= 0 && table[cur_n - 1][cur_m] == 0)
+		cur = infector.front();
+		infector.pop();
+		//상
+		if (check(cur.m, cur.n - 1) == 1 && map[cur.n-1][cur.m] == 0)
 		{
-			table[cur_n - 1][cur_m] = 1;
-			queue[head].m = cur_m;
-			queue[head].n = cur_n - 1;
-			queue[head].time = cur_time + 1;
-			head++;
+			map[cur.n-1][cur.m]=map[cur.n][cur.m]+1;
+			infector.push(Point{ cur.m,cur.n - 1 });
 		}
-
-		if (cur_n + 1 < N && table[cur_n + 1][cur_m] == 0)
+		if (check(cur.m, cur.n + 1) == 1 && map[cur.n+1][cur.m] == 0)
 		{
-			table[cur_n + 1][cur_m] = 1;
-			queue[head].m = cur_m;
-			queue[head].n = cur_n + 1;
-			queue[head].time = cur_time + 1;
-			head++;
+			map[cur.n + 1][cur.m] = map[cur.n][cur.m] + 1;
+			infector.push(Point{ cur.m,cur.n + 1 });
 		}
-
-		if (cur_m + 1 < M && table[cur_n][cur_m + 1] == 0)
+		if (check(cur.m-1, cur.n) == 1 && map[cur.n][cur.m-1] == 0)
 		{
-			table[cur_n][cur_m + 1] = 1;
-			queue[head].m = cur_m + 1;
-			queue[head].n = cur_n;
-			queue[head].time = cur_time + 1;
-			head++;
+			map[cur.n][cur.m-1] = map[cur.n][cur.m] + 1;
+			infector.push(Point{ cur.m-1,cur.n });
 		}
-
-		if (cur_m - 1 >= 0 && table[cur_n][cur_m - 1] == 0)
+		if (check(cur.m+1, cur.n ) == 1 && map[cur.n][cur.m+1] == 0)
 		{
-			table[cur_n][cur_m - 1] = 1;
-			queue[head].m = cur_m - 1;
-			queue[head].n = cur_n;
-			queue[head].time = cur_time + 1;
-			head++;
+			map[cur.n][cur.m+1] = map[cur.n][cur.m] + 1;
+			infector.push(Point{ cur.m+1,cur.n });
 		}
-
+		//하
+		//좌
+		//우
 	}
 
-	int notComplete = 0;
-	for (int i = 0; i < N; i++)
+	int ret = -1;
+	int max = -1;
+	for (int n = 0; n < N; n++)
 	{
-		for (int j = 0; j < M; j++)
+		for (int m = 0; m < M; m++)
 		{
-			if (table[i][j] == 0)
-				notComplete = 1;
+			if (map[n][m] == 0)
+			{
+				cout << -1 << endl;
+				return 0;
+			}
+			if (max < map[n][m])
+				max = map[n][m];
 		}
 	}
 
-
-	if (notComplete == 1)
-		cout << -1 << endl;
-	else
-		cout << time << endl;
-
+	cout << max-1 << endl;
 	return 0;	// 정상종료 시 반드시 0을 리턴해야 합니다.
 }
